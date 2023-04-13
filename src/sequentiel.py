@@ -16,6 +16,8 @@ class sequentiel :
         for modul in self._moduls :
             X=modul.forward(X)
             self._features.append(X)
+
+        return self._features[-1]
         
     def backward(self, delta ):
         """

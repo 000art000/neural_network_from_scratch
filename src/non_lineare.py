@@ -9,7 +9,7 @@ class TanH (Module) :
         return np.tanh(X)
 
     def backward_delta(self, input, delta):
-        return  (1-np.tanh(input)**2)* delta
+        return  delta*(1-np.tanh(input)**2)
 
 class Sigmoide (Module):
     
@@ -19,5 +19,17 @@ class Sigmoide (Module):
     
     def backward_delta(self, input, delta):
         outh = 1 / (1 + np.exp(-input))
+
         return delta * (outh * (1 - outh))
+    
+class Softmax(Module):
+
+    def forward(self,X):
+        """ X:(batch,d)->(batch,d) """
+        exp=np.exp(X)
+        return X/exp.sum(axis=1)
+    
+    def backward_delta(self,X,delta):
+        sof=self.forward(X)
+        return sof(1-sof)* delta    
  
