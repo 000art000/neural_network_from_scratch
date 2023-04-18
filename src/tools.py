@@ -105,3 +105,50 @@ def show_usps(data):
     plt.imshow(data.reshape((16,16)),interpolation="nearest",cmap="gray")
 
 ###########################################################################################################################
+
+def print_image(X,Y,net,size,n):
+    fig,ax=plt.subplots(nrows=np.math.ceil( size/4 ),ncols=4,figsize=(20,5))
+    ax=ax.flatten()
+
+    choice=np.random.choice(np.arange(X.shape[0]),size=size)
+    fig.tight_layout()
+
+    for pos,i in enumerate(choice) :
+        y_hat=net.predict(np.array([X[i]])) 
+        ax[pos].imshow(X[i].reshape((n,n)),interpolation="nearest",cmap="gray")
+        ax[pos].set_title(f'classe predit {y_hat[0]} / vrai class {Y[i]}')
+        ax[pos].set_axis_off()
+
+    for  i in range(size,len(ax)):
+        ax[i].set_visible(False)
+
+    plt.close(fig)
+    return fig
+
+def print_auto_encoder(X,net,size,n):
+
+    fig,ax=plt.subplots(nrows=np.math.ceil( size/4 )*2,ncols=4,figsize=(20,20))
+    ax=ax.flatten()
+
+    choice=np.random.choice(np.arange(X.shape[0]),size=size)
+    fig.tight_layout()
+    x=X[choice]
+
+    y_hat=net.predict(np.array(x))
+
+    for pos,i in enumerate(choice):
+
+        ax[pos*2].imshow(X[i].reshape((n,n)),interpolation="nearest",cmap="gray")
+        ax[pos*2].set_title(f'original {i}')
+        ax[pos*2 +1 ].imshow(y_hat[pos].reshape((n,n)),interpolation="nearest",cmap="gray")
+        ax[pos*2 +1 ].set_title(f'reconstuit {i}')
+        ax[pos*2].set_axis_off()
+        ax[pos*2 +1 ].set_axis_off()
+
+    for  i in range(size+1,len(ax)):
+        ax[i].set_visible(False)
+        
+
+    plt.close(fig)
+    return fig
+

@@ -19,17 +19,16 @@ class Sigmoide (Module):
     
     def backward_delta(self, input, delta):
         outh = 1 / (1 + np.exp(-input))
-
         return delta * (outh * (1 - outh))
     
-class Softmax(Module):
-
+class Softmax(Module):  
+ 
     def forward(self,X):
         """ X:(batch,d)->(batch,d) """
         exp=np.exp(X)
-        return X/exp.sum(axis=1)
+        return exp/np.sum(exp,axis=1).reshape((-1,1))
     
     def backward_delta(self,X,delta):
         sof=self.forward(X)
-        return sof(1-sof)* delta    
- 
+        return sof * (1-sof) * delta  
+

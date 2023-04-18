@@ -1,18 +1,18 @@
 
-class sequentiel :
+class Sequentiel :
     
-    def __init__(self,modules):
+    def __init__(self,modules,label=None):
         self._moduls=modules
         self._features=[]
-        self._deltas=[]
+        #sert si on fait une regression lineare ou non
+        self._label=label
 
     def forward(self, X):
         """
-            avoir en premier les les premiere features puis les new_features transformer grace a la premiere couche puis la 2eme ect jusqu'a la derniere couche
+            avoir en premier les premiere features puis les new_features transformer grace a la premiere couche puis la 2eme ect jusqu'a la derniere couche
         """
 
-        self._features.append(X)
-
+        self._features=[X]
         for modul in self._moduls :
             X=modul.forward(X)
             self._features.append(X)
@@ -40,3 +40,9 @@ class sequentiel :
         for modul in self._moduls :
             modul.update_parameters(gradient_step)
             modul.zero_grad()
+
+    def predict(self,X):
+        if self._label is None : 
+            return self.forward(X)
+        return self._label(self.forward(X))
+
