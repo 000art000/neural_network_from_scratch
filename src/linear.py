@@ -1,18 +1,19 @@
 from body import Module
 import numpy as np
 
+from tools import params
 
 class Linear (Module) :
 
-    def __init__(self,input,output):
+    def __init__(self,input,output,type=0):
         
         # d d'
         self._input=input
         self._output=output
 
         # param
-        self._parameters = np.random.normal(size=(input,output))
-        self._biais = np.random.normal(size=(1,output))
+        self._parameters =params(input,output,type)
+        self._biais = params(1,output,type)
         
         # gradient
         self._gradient_biais=np.zeros((1,output))
@@ -20,8 +21,8 @@ class Linear (Module) :
     
     def zero_grad(self):
         ## Annule gradient
-        self._gradient_biais *=0 
-        self._gradient_param *=0
+        self._gradient_biais =np.zeros((1, self._output))
+        self._gradient_param =np.zeros((self._input, self._output))
 
     def forward(self, X):
         """ X:(batch,d)->(batch,d') """

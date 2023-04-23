@@ -16,12 +16,14 @@ class MSELoss (Loss):
 class CELoss(Loss):
     
     def forward(self, y, yhat):
-        assert y.shape == yhat.shape
-        return (-y*yhat).sum(axis=1)
-
+        #params passé en entrée sont de la bonne taille
+        assert(y.shape == yhat.shape)
+        return 1 - np.sum(yhat * y, axis = 1)
+    
     def backward(self, y, yhat):
-        assert y.shape == yhat.shape
-        return -y
+        #params passé en entrée sont de la bonne taille 
+        assert(y.shape == yhat.shape)  
+        return yhat-y
     
 class LOGSOFTCELoss(Loss):
     def forward(self, y, yhat):
@@ -39,12 +41,17 @@ class LOGSOFTCELoss(Loss):
 
 class BCELoss(Loss):
     
-    def forward(self, y, yhat):
-        assert y.shape == yhat.shape
-        yhat+=1e-9
-        return y*np.log(yhat) + (1-y)*np.log(1-yhat)
 
+    def forward(self, y, yhat):
+        """
+        y -> One hot encoding
+        """
+        return - (y*np.log(yhat + 1e-100) + (1-y)*np.log(1-yhat+ 1e-100))
+
+    
     def backward(self, y, yhat):
-        assert y.shape == yhat.shape
-        yhat+=1e-9
-        return -y/yhat + (1-y)/(1-yhat)
+        """
+        y -> One hot encoding
+        """
+        
+        return ((1-y)/(1-yhat+ 1e-100)) - (y/yhat+ 1e-100)

@@ -2,7 +2,7 @@ import numpy as np
 #from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
+from keras.datasets import mnist
 
 def plot_data(data,labels=None,ax=plt):
     """
@@ -104,6 +104,16 @@ def get_usps(l,datax,datay):
 def show_usps(data):
     plt.imshow(data.reshape((16,16)),interpolation="nearest",cmap="gray")
 
+def params(n,d,dat):
+
+   if dat == 1:
+     parameters = np.random.normal(0, 1, (n, d)) * np.sqrt(2 / (n + d))
+   elif dat == 0:
+     parameters = np.random.normal(0, 1, (n, d))
+   else :
+     parameters = np.random.normal(0, 1, (n, d)) * np.sqrt(2 / (n + d))
+   return parameters
+
 ###########################################################################################################################
 
 def print_image(X,Y,net,size,n):
@@ -127,7 +137,7 @@ def print_image(X,Y,net,size,n):
 
 def print_auto_encoder(X,net,size,n):
 
-    fig,ax=plt.subplots(nrows=np.math.ceil( size/4 )*2,ncols=4,figsize=(20,20))
+    fig,ax=plt.subplots(nrows=np.math.ceil( size/8 )*2,ncols=8,figsize=(20,20))
     ax=ax.flatten()
 
     choice=np.random.choice(np.arange(X.shape[0]),size=size)
@@ -145,10 +155,46 @@ def print_auto_encoder(X,net,size,n):
         ax[pos*2].set_axis_off()
         ax[pos*2 +1 ].set_axis_off()
 
-    for  i in range(size+1,len(ax)):
+    for  i in range(size*2,len(ax)):
         ax[i].set_visible(False)
         
 
     plt.close(fig)
     return fig
 
+def load_mist(n_train,n_test):
+    d =784
+    trs = 60000
+    trt = 10000
+
+          
+    (X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+ 
+    X_train = X_train.reshape(trs, d)
+    X_test = X_test.reshape(trt, d)
+    X_train = X_train.astype('float32')
+    X_test = X_test.astype('float32')
+
+    indx_tr=np.arange(X_train.shape[0])
+    indx_tt=np.arange(X_test.shape[0])
+
+    np.random.shuffle(indx_tr)
+    np.random.shuffle(indx_tt)
+
+    tr = indx_tr[:n_train]
+    tt = indx_tt[:n_test]
+
+    return X_train[tr],y_train[tr],X_test[tt],y_test[tt]
+
+####################################################################################################################################
+
+def add_noise(data,type=0,p=0.1):
+    
+    if type == 0:
+        return data + p * np.random.normal(loc=0.0, scale=0.5, size=data.shape) 
+    if type == 1:
+        out = data + np.random.choice([0, 1], size=data.shape, p=[1-p, p])
+        return np.where(out > 1,1,out)
+    else:
+        print("wrong type")

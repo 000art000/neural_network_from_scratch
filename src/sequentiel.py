@@ -28,9 +28,8 @@ class Sequentiel :
 
         for i,modul in enumerate( self._moduls[::-1] ):
             input=features_rev[1+i]
-            new_delta=modul.backward_delta(input,delta)
             modul.backward_update_gradient(input,delta)
-            delta=new_delta
+            delta=modul.backward_delta(input,delta)
         
     def update_parameters(self, gradient_step=1e-3):
         """
