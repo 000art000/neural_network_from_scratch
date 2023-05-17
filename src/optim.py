@@ -37,16 +37,19 @@ class Optim:
         #deviser les indexe en nb_bloc
         indexs=np.array_split(indexs,nb_bloc)
 
-        list_loss=[]
+        mean_loss=[]
+        std_loss=[]
+
 
         for _ in tqdm(range(epochs)) :
 
             for ind in indexs :
                 loss=self.step(X[ind],Y[ind])
 
-            list_loss.append(np.mean(loss))
+            mean_loss.append(np.mean(loss))
+            std_loss.append(np.std(loss))
 
-        return list_loss
+        return mean_loss,std_loss
 
 
     def accuracy(self,x,y):

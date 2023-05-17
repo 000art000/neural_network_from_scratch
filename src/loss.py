@@ -5,7 +5,7 @@ class MSELoss (Loss):
 
     def forward(self, y, yhat):
         assert y.shape == yhat.shape
-        return (y-yhat)**2
+        return np.sum(y-yhat,axis=1)**2
     
     def backward(self, y, yhat):
         assert y.shape == yhat.shape

@@ -111,7 +111,7 @@ def params(n,d,dat):
    elif dat == 0:
      parameters = np.random.normal(0, 1, (n, d))
    else :
-     parameters = np.random.normal(0, 1, (n, d)) * np.sqrt(2 / (n + d))
+     parameters = np.random.normal(0, 1, (n, d)) -0.5
    return parameters
 
 ###########################################################################################################################
